@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nikky Lee — Developer Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#08080c; --bg2:#0e0e14; --card:#111118; --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.12); --gold:#e8c97a; --gold2:#f5dfa0;
+  --cream:#f0ebe0; --text:#d8d4cc; --muted:#6e6b66; --muted2:#9e9a94;
+  --green:#6edaaa; --r:14px; --hf:'Clash Display',sans-serif; --bf:'Cabinet Grotesk',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--bf);font-weight:400;overflow-x:hidden;cursor:none}
+#cursor-dot{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .15s ease}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid rgba(232,201,122,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s,border-color .3s}
+::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:var(--bg)} ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px}
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5}
+body::after{content:'';position:fixed;inset:0;z-index:9997;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='0.08'/%3E%3C/svg%3E");opacity:.22;mix-blend-mode:overlay}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:24px 60px;transition:background .4s,padding .4s}
+nav.scrolled{background:rgba(8,8,12,.88);backdrop-filter:blur(24px);padding:16px 60px;border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--hf);font-weight:700;font-size:1.25rem;color:var(--cream);text-decoration:none;letter-spacing:-.02em;display:flex;align-items:center;gap:6px}
+.nav-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pdot 2s ease infinite}
+@keyframes pdot{0%,100%{box-shadow:0 0 0 0 rgba(232,201,122,.5)}50%{box-shadow:0 0 0 6px rgba(232,201,122,0)}}
+.nav-links{display:flex;gap:40px;list-style:none;align-items:center}
+.nav-links a{color:var(--muted2);text-decoration:none;font-size:.82rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;position:relative;transition:color .25s}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .3s ease}
+.nav-links a:hover{color:var(--cream)} .nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{background:transparent!important;border:1px solid var(--gold)!important;color:var(--gold)!important;padding:8px 22px;border-radius:100px;transition:background .25s,color .25s!important}
+.nav-cta:hover{background:var(--gold)!important;color:var(--bg)!important} .nav-cta::after{display:none!important}
+
+/* HERO */
+#hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 60px;max-width:1240px;margin:0 auto}
+.h-eye{display:inline-flex;align-items:center;gap:10px;margin-bottom:30px;opacity:0;animation:fadeUp .7s .2s ease forwards}
+.h-eye-line{width:40px;height:1px;background:var(--gold)}
+.h-eye-text{font-size:.76rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.h-name{font-family:var(--hf);font-size:clamp(4.5rem,10vw,9.5rem);font-weight:700;line-height:.94;letter-spacing:-.04em;color:var(--cream);margin-bottom:18px;opacity:0;animation:fadeUp .8s .35s ease forwards}
+.h-name .outline{-webkit-text-stroke:1.5px var(--gold);color:transparent}
+.h-role{font-family:var(--hf);font-size:clamp(1.1rem,2.6vw,2rem);font-weight:400;letter-spacing:-.02em;color:var(--muted2);margin-bottom:38px;opacity:0;animation:fadeUp .8s .5s ease forwards}
+.h-role em{color:var(--gold);font-style:normal}
+.h-desc{max-width:500px;color:var(--muted2);font-size:1rem;font-weight:300;line-height:1.85;margin-bottom:52px;opacity:0;animation:fadeUp .8s .65s ease forwards}
+.h-btns{display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:fadeUp .8s .8s ease forwards}
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--bf);font-weight:700;font-size:.88rem;letter-spacing:.02em;text-decoration:none;padding:14px 30px;border-radius:100px;transition:transform .25s,box-shadow .25s,background .25s;cursor:none}
+.btn-g{background:var(--gold);color:#08080c;box-shadow:0 8px 32px rgba(232,201,122,.25)}
+.btn-g:hover{transform:translateY(-3px);box-shadow:0 16px 48px rgba(232,201,122,.4);background:var(--gold2)}
+.btn-o{background:transparent;color:var(--text);border:1px solid var(--border2)}
+.btn-o:hover{transform:translateY(-3px);border-color:var(--gold);color:var(--gold);background:rgba(232,201,122,.06)}
+.h-scroll{position:absolute;bottom:40px;left:60px;display:flex;align-items:center;gap:12px;opacity:0;animation:fadeUp .8s 1.1s ease forwards}
+.sc-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scpulse 2s ease infinite}
+@keyframes scpulse{0%,100%{opacity:.4}50%{opacity:1}}
+.sc-txt{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl;transform:rotate(180deg)}
+.h-stats{position:absolute;right:60px;bottom:40px;display:flex;flex-direction:column;gap:28px;opacity:0;animation:fadeUp .8s 1.2s ease forwards}
+.stat{text-align:right}
+.stat-n{font-family:var(--hf);font-size:2rem;font-weight:700;color:var(--cream);line-height:1}
+.stat-n span{color:var(--gold)}
+.stat-l{font-size:.7rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+/* DIVIDER */
+.div{position:relative;z-index:1;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:0 60px}
+
+/* SECTION */
+.sec{position:relative;z-index:1;padding:120px 60px;max-width:1240px;margin:0 auto}
+.s-lbl{font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.s-lbl::before{content:'';width:32px;height:1px;background:var(--gold)}
+.s-ttl{font-family:var(--hf);font-size:clamp(2.2rem,5vw,4.2rem);font-weight:700;letter-spacing:-.03em;color:var(--cream);line-height:1.05;margin-bottom:60px}
+.s-ttl .dim{color:var(--muted)}
+
+/* ABOUT */
+.ag{display:grid;grid-template-columns:1fr 1.1fr;gap:80px;align-items:start}
+.ab p{color:var(--muted2);font-size:1rem;font-weight:300;line-height:1.88;margin-bottom:18px}
+.ab p strong{color:var(--cream);font-weight:700} .ab p em{color:var(--gold);font-style:normal}
+.sk-blk{margin-bottom:28px}
+.sk-lbl{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.sk-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{font-size:.79rem;font-weight:500;padding:5px 13px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--text);transition:border-color .2s,color .2s,background .2s;cursor:default}
+.pill:hover{border-color:var(--gold);color:var(--gold);background:rgba(232,201,122,.06)}
+.pill.hi{border-color:rgba(232,201,122,.35);color:var(--gold);background:rgba(232,201,122,.07)}
+.pill.gr{border-color:rgba(110,218,170,.3);color:var(--green);background:rgba(110,218,170,.07)}
+
+/* PROJECTS */
+.pj-wrap{display:flex;flex-direction:column;gap:3px}
+.pj{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .4s;position:relative}
+.pj::before{content:'';position:absolute;inset:0;background:radial-gradient(800px circle at var(--mx,50%) var(--my,50%),rgba(232,201,122,.05),transparent 40%);opacity:0;transition:opacity .5s;pointer-events:none}
+.pj:hover{border-color:rgba(232,201,122,.38)} .pj:hover::before{opacity:1}
+.pj-grid{display:grid;grid-template-columns:1fr 1fr;min-height:340px}
+.pj-info{padding:48px 52px;border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:space-between}
+.pj-meta{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.pj-n{font-family:var(--hf);font-size:.7rem;font-weight:700;letter-spacing:.1em;color:var(--muted)}
+.badge-live{font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:100px;background:rgba(110,218,170,.12);color:var(--green);border:1px solid rgba(110,218,170,.3);display:flex;align-items:center;gap:5px}
+.badge-live::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);animation:blk 1.5s infinite}
+@keyframes blk{0%,100%{opacity:1}50%{opacity:.3}}
+.badge-course{font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:100px;background:rgba(232,201,122,.1);color:var(--gold);border:1px solid rgba(232,201,122,.3)}
+.pj-title{font-family:var(--hf);font-size:1.85rem;font-weight:700;letter-spacing:-.03em;color:var(--cream);margin-bottom:12px}
+.pj-desc{color:var(--muted2);font-size:.93rem;font-weight:300;line-height:1.82;margin-bottom:26px}
+.pj-stack{display:flex;flex-wrap:wrap;gap:6px}
+.stk{font-size:.74rem;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--border);padding:4px 10px;border-radius:4px}
+.pj-panel{padding:48px 52px;display:flex;flex-direction:column;justify-content:space-between}
+.pj-num-bg{font-family:var(--hf);font-size:6rem;font-weight:700;color:rgba(255,255,255,.04);line-height:1;letter-spacing:-.04em;margin-bottom:auto}
+.pj-feats{list-style:none;margin-bottom:30px}
+.pj-feats li{display:flex;align-items:flex-start;gap:10px;font-size:.88rem;color:var(--muted2);font-weight:300;padding:9px 0;border-bottom:1px solid var(--border)}
+.pj-feats li:last-child{border-bottom:none}
+.pj-feats li::before{content:'→';color:var(--gold);flex-shrink:0;font-size:.78rem;margin-top:2px}
+.pj-btn{display:inline-flex;align-items:center;gap:8px;font-size:.8rem;font-weight:700;letter-spacing:.05em;color:var(--gold);text-decoration:none;border:1px solid rgba(232,201,122,.35);padding:10px 20px;border-radius:8px;background:rgba(232,201,122,.06);transition:background .25s,border-color .25s;width:fit-content;cursor:none}
+.pj-btn:hover{background:rgba(232,201,122,.14);border-color:var(--gold)}
+
+/* EDUCATION */
+.edu{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:56px 60px;display:grid;grid-template-columns:auto 1fr;gap:52px;align-items:start;transition:border-color .3s}
+.edu:hover{border-color:rgba(232,201,122,.3)}
+.edu-ico{width:80px;height:80px;border-radius:20px;background:rgba(232,201,122,.1);border:1px solid rgba(232,201,122,.25);display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0}
+.edu-deg{font-family:var(--hf);font-size:1.55rem;font-weight:700;letter-spacing:-.02em;color:var(--cream);margin-bottom:6px}
+.edu-sch{font-size:.98rem;color:var(--gold);font-weight:600;margin-bottom:4px}
+.edu-per{font-size:.84rem;color:var(--muted);margin-bottom:26px}
+.edu-cl{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+
+/* CONTACT */
+.ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.ct-l p{color:var(--muted2);font-size:1rem;font-weight:300;line-height:1.82;margin-bottom:38px}
+.ct-links{display:flex;flex-direction:column;gap:11px}
+.cl{display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:17px 22px;text-decoration:none;color:var(--text);transition:border-color .25s,transform .25s,background .25s;cursor:none}
+.cl:hover{border-color:rgba(232,201,122,.4);transform:translateX(6px);background:rgba(232,201,122,.04)}
+.cl:hover .cl-txt{color:var(--gold)}
+.cl-ico{width:42px;height:42px;border-radius:10px;background:rgba(232,201,122,.1);border:1px solid rgba(232,201,122,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cl-lbl{font-size:.68rem;color:var(--muted);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+.cl-txt{font-weight:600;font-size:.9rem;transition:color .25s}
+.cl-arr{margin-left:auto;color:var(--muted);transition:transform .25s,color .25s}
+.cl:hover .cl-arr{transform:translateX(4px);color:var(--gold)}
+.ct-r{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 40px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);position:relative;overflow:hidden}
+.ct-r::before{content:'';position:absolute;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(232,201,122,.07),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%)}
+.av-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(110,218,170,.1);border:1px solid rgba(110,218,170,.3);color:var(--green);font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 16px;border-radius:100px;margin-bottom:26px;position:relative}
+.av-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);animation:blk 1.5s infinite}
+.ct-r h3{font-family:var(--hf);font-size:2rem;font-weight:700;letter-spacing:-.03em;color:var(--cream);margin-bottom:10px;position:relative}
+.ct-r p{color:var(--muted2);font-size:.92rem;font-weight:300;line-height:1.75;margin-bottom:30px;position:relative}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:30px 60px;display:flex;align-items:center;justify-content:space-between}
+.f-logo{font-family:var(--hf);font-size:.95rem;font-weight:700;color:var(--muted)}
+.f-copy{font-size:.78rem;color:var(--muted);letter-spacing:.04em}
+.f-links{display:flex;gap:24px}
+.f-links a{font-size:.78rem;color:var(--muted);text-decoration:none;letter-spacing:.07em;text-transform:uppercase;transition:color .2s}
+.f-links a:hover{color:var(--gold)}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s} .d4{transition-delay:.4s}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav,nav.scrolled{padding:18px 24px}
+  #hero{padding:0 24px}
+  .h-stats{right:24px}
+  .sec{padding:80px 24px}
+  .div{margin:0 24px}
+  .ag{grid-template-columns:1fr;gap:44px}
+  .pj-grid{grid-template-columns:1fr}
+  .pj-info{border-right:none;border-bottom:1px solid var(--border);padding:36px 28px}
+  .pj-panel{padding:28px 28px}
+  .pj-num-bg{font-size:4rem}
+  .edu{grid-template-columns:1fr;gap:24px;padding:36px 28px}
+  .ct-grid{grid-template-columns:1fr;gap:40px}
+  footer{flex-direction:column;gap:16px;text-align:center;padding:28px 24px}
+}
+@media(max-width:580px){
+  .h-name{font-size:clamp(3rem,14vw,5rem)}
+  .h-stats{display:none}
+  .nav-cta{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">Nikky<span class="nav-dot"></span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact" class="nav-cta">Hire Me</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="h-eye">
+    <span class="h-eye-line"></span>
+    <span class="h-eye-text">4th Year · MacEwan University · Computer Science</span>
+  </div>
+  <h1 class="h-name">
+    Ka-Wing<br>
+    <span class="outline">Nikky</span> Lee
+  </h1>
+  <p class="h-role">Full-Stack Developer &amp; <em>Problem Solver</em></p>
+  <p class="h-desc">
+    I build web platforms, Android apps, and data visualizations that are clean, 
+    purposeful, and actually ship. Actively seeking opportunities to grow as a developer.
+  </p>
+  <div class="h-btns">
+    <a href="#projects" class="btn btn-g">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      View My Work
+    </a>
+    <a href="mailto:nikkylee917@gmail.com" class="btn btn-o">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      Get In Touch
+    </a>
+    <a href="https://github.com/NikkyL49" target="_blank" rel="noopener" class="btn btn-o">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      GitHub
+    </a>
+  </div>
+  <div class="h-scroll"><div class="sc-line"></div><span class="sc-txt">Scroll</span></div>
+  <div class="h-stats">
+    <div class="stat"><div class="stat-n">3<span>+</span></div><div class="stat-l">Projects Built</div></div>
+    <div class="stat"><div class="stat-n">4<span>th</span></div><div class="stat-l">Year CS Student</div></div>
+    <div class="stat"><div class="stat-n">8<span>+</span></div><div class="stat-l">Technologies</div></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ABOUT -->
+<section id="about" class="sec">
+  <div class="s-lbl reveal">Background</div>
+  <h2 class="s-ttl reveal">About <span class="dim">Me.</span></h2>
+  <div class="ag">
+    <div class="ab">
+      <p class="reveal">I'm <strong>Ka-Wing (Nikky) Lee</strong>, a <em>4th-year Computer Science student</em> at MacEwan University with a genuine passion for building things that people actually use.</p>
+      <p class="reveal d1">My work spans <strong>full-stack web development</strong>, <strong>Android app development</strong>, and <strong>interactive data visualizations</strong>. I care about both the technical depth — database design, security, APIs — and the user-facing side: clean interfaces and real utility.</p>
+      <p class="reveal d2">I've worked in team environments using Agile workflows, contributed across the entire stack, and taken real apps from <em>Figma prototype all the way to production deployment</em> on Vercel.</p>
+    </div>
+    <div class="reveal d1">
+      <div class="sk-blk">
+        <div class="sk-lbl">Languages</div>
+        <div class="pills">
+          <span class="pill hi">JavaScript</span><span class="pill hi">TypeScript</span>
+          <span class="pill">Kotlin</span><span class="pill">Java</span>
+          <span class="pill">Python</span><span class="pill">C</span>
+          <span class="pill">SQL</span><span class="pill">HTML &amp; CSS</span>
+        </div>
+      </div>
+      <div class="sk-blk">
+        <div class="sk-lbl">Frameworks &amp; Platforms</div>
+        <div class="pills">
+          <span class="pill hi">Next.js 14</span><span class="pill gr">Supabase</span>
+          <span class="pill">React</span><span class="pill">Android SDK</span>
+          <span class="pill">Firebase</span><span class="pill">Node.js</span>
+          <span class="pill">ArcGIS Java SDK</span>
+        </div>
+      </div>
+      <div class="sk-blk">
+        <div class="sk-lbl">Tools &amp; Workflow</div>
+        <div class="pills">
+          <span class="pill">Git / GitHub</span><span class="pill">Vercel</span>
+          <span class="pill">PostgreSQL</span><span class="pill">Figma</span>
+          <span class="pill">IntelliJ IDEA</span><span class="pill">VS Code</span>
+          <span class="pill">Maven</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- PROJECTS -->
+<section id="projects" class="sec">
+  <div class="s-lbl reveal">What I've Built</div>
+  <h2 class="s-ttl reveal">Selected <span class="dim">Projects.</span></h2>
+  <div class="pj-wrap">
+
+    <!-- RENTIFY -->
+    <div class="pj reveal">
+      <div class="pj-grid">
+        <div class="pj-info">
+          <div>
+            <div class="pj-meta"><span class="pj-n">01 —</span><span class="badge-live">Live · Deployed</span></div>
+            <h3 class="pj-title">Rentify</h3>
+            <p class="pj-desc">A student-to-student rental marketplace built for campus life. Students can list and borrow textbooks, laptops, calculators, and lab equipment across multiple campus locations — with a complete rental lifecycle from request to return.</p>
+            <div class="pj-stack">
+              <span class="stk">Next.js 14</span><span class="stk">TypeScript</span>
+              <span class="stk">Supabase (PostgreSQL)</span><span class="stk">Row Level Security</span>
+              <span class="stk">Vercel</span><span class="stk">App Router</span>
+            </div>
+          </div>
+        </div>
+        <div class="pj-panel">
+          <div class="pj-num-bg">01</div>
+          <ul class="pj-feats">
+            <li>Real-time messaging between renters &amp; lenders</li>
+            <li>Admin dashboard — manage users, locations, item approvals &amp; bans</li>
+            <li>Payment tracking with masked card display &amp; expiry validation</li>
+            <li>User ratings system tied to the rental lifecycle</li>
+            <li>EAV schema for flexible specs across different item types</li>
+          </ul>
+          <a href="https://github.com/NikkyL49" target="_blank" rel="noopener" class="pj-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHARPENED SCHEDULING -->
+    <div class="pj reveal">
+      <div class="pj-grid">
+        <div class="pj-info">
+          <div>
+            <div class="pj-meta"><span class="pj-n">02 —</span><span class="badge-course">Android · CMPT 395</span></div>
+            <h3 class="pj-title">Sharpened Scheduling</h3>
+            <p class="pj-desc">An Android scheduling app for students, instructors, and admins. Built with role-based access, an interactive monthly calendar, in-app messaging, push notifications, and rescheduling with configurable limits — all backed by Firebase for real-time sync.</p>
+            <div class="pj-stack">
+              <span class="stk">Kotlin</span><span class="stk">Android SDK</span>
+              <span class="stk">Firebase Auth</span><span class="stk">Firestore</span>
+              <span class="stk">MVVM</span><span class="stk">Role-Based Access</span>
+            </div>
+          </div>
+        </div>
+        <div class="pj-panel">
+          <div class="pj-num-bg">02</div>
+          <ul class="pj-feats">
+            <li>3-role access system: Student, Instructor, Admin</li>
+            <li>Interactive calendar with booking &amp; rescheduling flow</li>
+            <li>In-app messenger with full conversation threading</li>
+            <li>Offline data caching via OfflineDataManager utility</li>
+            <li>Zoomable campus room map with custom image overlay</li>
+          </ul>
+          <a href="https://github.com/NikkyL49" target="_blank" rel="noopener" class="pj-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDMONTON HOUSING -->
+    <div class="pj reveal">
+      <div class="pj-grid">
+        <div class="pj-info">
+          <div>
+            <div class="pj-meta"><span class="pj-n">03 —</span><span class="badge-course">Desktop · CMPT 305</span></div>
+            <h3 class="pj-title">Edmonton Housing Map</h3>
+            <p class="pj-desc">An interactive Java desktop application for exploring Edmonton's real estate landscape. Visualizes 2025 City of Edmonton property assessment data with colour-coded price layers, school overlays, neighbourhood statistics, and address-based property search.</p>
+            <div class="pj-stack">
+              <span class="stk">Java</span><span class="stk">ArcGIS Maps SDK</span>
+              <span class="stk">Maven</span><span class="stk">Open Data (Edmonton)</span>
+              <span class="stk">Data Visualization</span>
+            </div>
+          </div>
+        </div>
+        <div class="pj-panel">
+          <div class="pj-num-bg">03</div>
+          <ul class="pj-feats">
+            <li>Colour-coded property price layers across 5 ranges</li>
+            <li>Clickable school markers categorized by type (Elementary, Jr/Sr High)</li>
+            <li>Neighbourhood stats panel with bar graph summary</li>
+            <li>Pie chart for price distribution per neighbourhood</li>
+            <li>Property search by Edmonton civic address</li>
+          </ul>
+          <a href="https://github.com/NikkyL49" target="_blank" rel="noopener" class="pj-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- EDUCATION -->
+<section id="education" class="sec">
+  <div class="s-lbl reveal">Where I Study</div>
+  <h2 class="s-ttl reveal">Education<span class="dim">.</span></h2>
+  <div class="edu reveal">
+    <div class="edu-ico">🎓</div>
+    <div>
+      <div class="edu-deg">Bachelor of Science — Computer Science</div>
+      <div class="edu-sch">MacEwan University · Edmonton, AB</div>
+      <div class="edu-per">2022 – Present &nbsp;·&nbsp; 4th Year &nbsp;·&nbsp; Expected Graduation: 2026</div>
+      <div class="edu-cl">Relevant Coursework</div>
+      <div class="pills">
+        <span class="pill">Web Application Development</span>
+        <span class="pill">Android App Development</span>
+        <span class="pill">Data Visualization</span>
+        <span class="pill">Database Design</span>
+        <span class="pill">Algorithms &amp; Data Structures</span>
+        <span class="pill">Software Engineering</span>
+        <span class="pill">Operating Systems</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- CONTACT -->
+<section id="contact" class="sec">
+  <div class="ct-grid">
+    <div class="ct-l">
+      <div class="s-lbl reveal">Let's Talk</div>
+      <h2 class="s-ttl reveal">Get In <span class="dim">Touch.</span></h2>
+      <p class="reveal">I'm actively looking for internships, co-ops, and junior developer roles. Whether you have a question, an opportunity, or just want to say hello — my inbox is always open.</p>
+      <div class="ct-links">
+        <a href="mailto:nikkylee917@gmail.com" class="cl reveal">
+          <div class="cl-ico"><svg width="18" height="18" fill="none" stroke="#e8c97a" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+          <div><div class="cl-lbl">Email</div><div class="cl-txt">nikkylee917@gmail.com</div></div>
+          <div class="cl-arr">→</div>
+        </a>
+        <a href="https://linkedin.com/in/ka-wing-lee-63197a201" target="_blank" rel="noopener" class="cl reveal d1">
+          <div class="cl-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="#e8c97a"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>
+          <div><div class="cl-lbl">LinkedIn</div><div class="cl-txt">Ka-Wing Lee</div></div>
+          <div class="cl-arr">→</div>
+        </a>
+        <a href="https://github.com/NikkyL49" target="_blank" rel="noopener" class="cl reveal d2">
+          <div class="cl-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="#e8c97a"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></div>
+          <div><div class="cl-lbl">GitHub</div><div class="cl-txt">NikkyL49</div></div>
+          <div class="cl-arr">→</div>
+        </a>
+      </div>
+    </div>
+    <div class="ct-r reveal">
+      <div class="av-badge">Open to Opportunities</div>
+      <h3>Let's build something.</h3>
+      <p>Internships, co-ops, junior roles — I'm ready to contribute from day one and keep growing.</p>
+      <a href="mailto:nikkylee917@gmail.com" class="btn btn-g">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        Say Hello
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="f-logo">NK ·</span>
+  <span class="f-copy">© 2026 Ka-Wing (Nikky) Lee · MacEwan University</span>
+  <div class="f-links">
+    <a href="https://github.com/NikkyL49" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://linkedin.com/in/ka-wing-lee-63197a201" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:nikkylee917@gmail.com">Email</a>
+  </div>
+</footer>
+
+<script>
+/* CURSOR */
+const dot=document.getElementById('cursor-dot'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  dot.style.left=mx+'px';dot.style.top=my+'px';
+});
+(function animRing(){
+  rx+=(mx-rx)*.11;ry+=(my-ry)*.11;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.pj,.pill,.cl').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    ring.style.width='54px';ring.style.height='54px';
+    ring.style.borderColor='rgba(232,201,122,.9)';
+    dot.style.transform='translate(-50%,-50%) scale(1.6)';
+  });
+  el.addEventListener('mouseleave',()=>{
+    ring.style.width='36px';ring.style.height='36px';
+    ring.style.borderColor='rgba(232,201,122,.5)';
+    dot.style.transform='translate(-50%,-50%) scale(1)';
+  });
+});
+
+/* NAV */
+const navbar=document.getElementById('nav');
+window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',scrollY>50));
+
+/* PARTICLE CANVAS */
+const canvas=document.getElementById('bg-canvas');
+const ctx=canvas.getContext('2d');
+let W,H,parts=[];
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;}
+resize();window.addEventListener('resize',resize);
+class P{
+  constructor(){this.reset();}
+  reset(){
+    this.x=Math.random()*W;this.y=Math.random()*H;
+    this.r=Math.random()*1.4+.3;
+    this.vx=(Math.random()-.5)*.16;this.vy=(Math.random()-.5)*.16;
+    this.a=Math.random()*.45+.08;
+    this.c=Math.random()>.55?'232,201,122':'110,218,170';
+  }
+  step(){
+    this.x+=this.vx;this.y+=this.vy;
+    if(this.x<0||this.x>W||this.y<0||this.y>H)this.reset();
+  }
+  draw(){
+    ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${this.c},${this.a})`;ctx.fill();
+  }
+}
+for(let i=0;i<120;i++)parts.push(new P());
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<parts.length;i++){
+    parts[i].step();parts[i].draw();
+    for(let j=i+1;j<parts.length;j++){
+      const dx=parts[i].x-parts[j].x,dy=parts[i].y-parts[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<115){
+        ctx.beginPath();
+        ctx.strokeStyle=`rgba(232,201,122,${.055*(1-d/115)})`;
+        ctx.lineWidth=.4;
+        ctx.moveTo(parts[i].x,parts[i].y);
+        ctx.lineTo(parts[j].x,parts[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* SCROLL REVEAL */
+const revs=document.querySelectorAll('.reveal');
+const obs=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});
+},{threshold:.1});
+revs.forEach(el=>obs.observe(el));
+
+/* CARD MOUSE GLOW */
+document.querySelectorAll('.pj').forEach(c=>{
+  c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect();
+    c.style.setProperty('--mx',e.clientX-r.left+'px');
+    c.style.setProperty('--my',e.clientY-r.top+'px');
+  });
+});
+</script>
+</body>
+</html>
